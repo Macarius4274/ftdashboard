@@ -1,7 +1,7 @@
 import React from 'react';
 import './Navbar.css';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth'; 
+import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faBoxOpen, faShoppingCart, faClipboardList, faCogs, faBell } from '@fortawesome/free-solid-svg-icons'; // Font Awesome icons
@@ -12,9 +12,9 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate('/'); // Redirect to login page after successful logout
+      navigate('/'); // Ensure '/' route is the login page
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error("Logout failed:", error.message);  // Log error details
     }
   };
 
@@ -58,8 +58,6 @@ const Navbar = () => {
             <button onClick={() => navigate('/notifications')} className="icon">
               <FontAwesomeIcon icon={faBell} />
             </button>
-          </li>
-          <li>
           </li>
           <li>
             <button className="logout-button" onClick={handleLogout}>

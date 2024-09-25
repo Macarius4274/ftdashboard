@@ -1,27 +1,43 @@
-/* Products page layout */
+/* General Page Layout */
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #00a7e1; /* Apply background globally */
+}
+
 .products-page {
-  padding: 20px;
-  background-color: #00a7e1;
+  padding: 30px;
   max-width: 1400px;
   margin: 0 auto;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.products-page h1 {
+  color: #03045e;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 /* Add product button */
 .add-product-btn {
-  background-color: #0077b6;
+  background-color: #00a7e1;
   color: white;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 0.9rem;
+  margin-bottom: 20px;
 }
 
 .add-product-btn:hover {
-  background-color: #005f9e;
+  background-color: #0077b6;
 }
 
-/* Modal Styles */
+/* Modal styles */
 .modal {
   position: fixed;
   top: 0;
@@ -35,56 +51,154 @@
   z-index: 1000;
 }
 
+.modal-close {
+  background-color: #0077b6; /* Green */
+  border-radius: 20%;
+  color: white;
+  padding: 16px;
+  text-align: center;
+  text-decoration: none;
+  font-size: large;
+}
+
+.modal-close :hover {
+  background-color: #005f9e;
+  color: white;
+  transition-duration: 0.4s;
+}
+
 .modal-content {
   background: white;
-  padding: 20px;
-  width: 500px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 600px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(83, 81, 81, 0.459);
+  transition: 0.3s ease-in-out;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
+/* Modal steps with icons and arrows */
+.modal-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.modal-steps .step {
+  display: flex;
+  align-items: center;
+}
+
+.modal-steps .step-icon {
+  background-color: #00a7e1;
+  color: white;
+  font-size: 1.2rem;
+  padding: 17px;
+  border-radius: 60%;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-steps .arrow {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 2rem;
+  color: #0077b6;
+}
+
+.modal-steps .active-step .step-icon {
+  background-color: #0077b6;
+}
+
+/* Preventing input overlaps */
 .modal-section {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-.modal-section input, .modal-section textarea {
+.modal-section label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #03045e;
+}
+
+.modal-section input,
+.modal-section textarea {
   width: 100%;
-  padding: 8px;
+  padding: 12px;
+  border-radius: 6px;
   border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  box-sizing: border-box;
 }
 
-.submit-btn, .cancel-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
+.modal-section textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+/* Ensuring button alignment and responsiveness */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 .submit-btn {
   background-color: #00a7e1;
   color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.submit-btn:hover {
+  background-color: #005f9e;
 }
 
 .cancel-btn {
   background-color: #d00000;
   color: white;
-  margin-left: 10px;
+  padding: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .cancel-btn:hover {
   background-color: #a00000;
 }
 
-/* Product Table Styles */
+/* Add some hover effects on step icons */
+.step-icon:hover {
+  background-color: #005f9e;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Global box-sizing reset to avoid overflow issues */
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+
+/* Product table styles */
 .product-table {
   width: 100%;
   background-color: #ffffff;
-  padding: 10px;
+  padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
 }
 
@@ -93,8 +207,9 @@
   border-collapse: collapse;
 }
 
-.product-table th, .product-table td {
-  padding: 8px;
+.product-table th,
+.product-table td {
+  padding: 15px;
   text-align: left;
   border-bottom: 1px solid #e0e0e0;
 }
@@ -102,19 +217,6 @@
 .product-table th {
   background-color: #0077b6;
   color: #ffffff;
-  font-size: 0.9rem;
-}
-
-.product-table td {
-  color: #333;
-  text-align: center;
-}
-
-.product-table td img {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 5px;
 }
 
 .product-table td button {
@@ -124,10 +226,42 @@
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 0.8rem;
   transition: background-color 0.3s;
 }
 
 .product-table td button:hover {
   background-color: #005f9e;
+}
+
+.product-table td img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* File Upload Section */
+.file-upload {
+  border: 2px dashed #0077b6;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  background-color: #f9fafb;
+  cursor: pointer;
+}
+
+.file-upload input[type="file"] {
+  display: none;
+}
+
+.browse-link {
+  color: #0077b6;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.image-note {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 10px;
 }

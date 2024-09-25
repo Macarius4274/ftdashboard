@@ -1,15 +1,23 @@
 /* Dashboard.css */
 
 /* Dashboard layout */
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #00a7e1; /* Apply the background color globally */
+}
+
 .dashboard {
-    padding: 30px;
+    padding: 20px;
+    min-height: 80vh;
     background-color: #00a7e1;
   }
   
   /* Dashboard content width */
   .dashboard-content {
     max-width: 1400px;
-    margin: 0 auto;
+    margin:auto;
   }
   
   /* Single card for Inventory Summary and Sales Activity */
@@ -26,7 +34,7 @@
   /* Sections inside the single card */
   .summary-section,
   .sales-section {
-    width: 48%;
+    width: 50%;
     
   }
   

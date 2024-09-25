@@ -37,7 +37,7 @@
   .navbar-links li button {
     display: flex;
     align-items: center;
-    font-size: 1rem;
+    font-size: 120%;
     color: #03045e; /* Dark navy for text */
     background: none;  /* Removing button background */
     border: none;  /* Removing border */
