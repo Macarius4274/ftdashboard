@@ -2,6 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 
 // Firebase configuration object
 const firebaseConfig = {
@@ -23,3 +25,5 @@ export const auth = getAuth(app);
 
 // Initialize Firestore
 export const db = getFirestore(app);  // Firestore should be initialized after Firebase
+
+export const storage = getStorage(app);

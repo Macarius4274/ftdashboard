@@ -21,7 +21,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <div className="navbar-brand"> .. F T . W E A R S ..</div>
+        <div className="navbar-brand">F T . W E A R S</div>
       </div>
       <div className="navbar-center">
         <ul className="navbar-links">
@@ -32,7 +32,7 @@ const Navbar = () => {
           </li>
           <li>
             <button onClick={() => navigate('/products')} className="navbar-link">
-              <FontAwesomeIcon icon={faBoxOpen} /> Products
+              <FontAwesomeIcon icon={faBoxOpen} /> Manage
             </button>
           </li>
           <li>

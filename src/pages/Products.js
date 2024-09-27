@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../firebaseConfig';  // Import Firestore instance
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Firebase storage imports
+import { db, storage } from '../firebaseConfig';  // Import Firestore and Firebase Storage instances
 import './Products.css';  // Ensure you have your CSS for styling
 
 const Products = () => {
@@ -10,6 +11,8 @@ const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);  // State to toggle modal
   const [currentStep, setCurrentStep] = useState(1);  // State to handle the current step in the modal
   const [imagePreview, setImagePreview] = useState(null);  // Image preview for the modal
+  const [imageFile, setImageFile] = useState(null);  // Image file for Firebase storage
+  const [isEditMode, setIsEditMode] = useState(false); // Track whether it's in edit mode
 
   const productsCollectionRef = collection(db, 'products');  // Reference to 'products' collection in Firestore
 
@@ -26,34 +29,50 @@ const Products = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageFile(file);  // Set image file to state for uploading to Firebase Storage
       const reader = new FileReader();
       reader.onload = (event) => {
-        setNewProduct((prevProduct) => ({
-          ...prevProduct,
-          imageUrl: event.target.result,  // Update image URL in the product state
-        }));
         setImagePreview(event.target.result);  // Preview the image
       };
       reader.readAsDataURL(file);  // Convert file to base64 URL for preview
     }
   };
 
+  // Upload image to Firebase Storage and get the download URL
+  const uploadImageAndGetUrl = async (file) => {
+    if (!file) return null;
+    
+    const storageRef = ref(storage, `productImages/${file.name}`);
+    await uploadBytes(storageRef, file);  // Upload the image
+    const downloadURL = await getDownloadURL(storageRef);  // Get the download URL
+    return downloadURL;
+  };
+
   // Create a new product
   const addProduct = async () => {
     // Validate all fields before submitting
-    if (!newProduct.name || !newProduct.description || !newProduct.category || 
-        !newProduct.color || !newProduct.price || !newProduct.size || 
-        !newProduct.stock || !newProduct.imageUrl || !newProduct.subCategory) {
+    const { name, description, category, color, price, size, stock, subCategory } = newProduct;
+    
+    if (!name || !description || !category || !color || price <= 0 || !size || stock <= 0 || !subCategory) {
       alert('Please fill out all required fields');
       return;
     }
 
     try {
+      // Upload the image to Firebase Storage and get the image URL
+      const imageUrl = await uploadImageAndGetUrl(imageFile);
+
+      if (!imageUrl) {
+        alert('Image upload failed. Please try again.');
+        return;
+      }
+
       // Submit the product to Firestore
       await addDoc(productsCollectionRef, {
         ...newProduct,
-        price: Number(newProduct.price),
-        stock: Number(newProduct.stock),
+        imageUrl,  // Use the uploaded image's URL
+        price: Number(price),
+        stock: Number(stock),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -80,16 +99,25 @@ const Products = () => {
       updatedAt: new Date(),
     });
     setEditProduct(null);  // Exit edit mode
+    setIsModalOpen(false);  // Close modal
   };
 
   // Delete a product
   const deleteProduct = async (id) => {
-    const productDoc = doc(db, 'products', id);
-    await deleteDoc(productDoc);
+    if (window.confirm('Do you want to delete this product?')) {
+      const productDoc = doc(db, 'products', id);
+      await deleteDoc(productDoc);
+    }
   };
 
   // Toggle modal visibility
-  const toggleModal = () => {
+  const toggleModal = (isEdit = false, product = null) => {
+    setIsEditMode(isEdit);
+    if (isEdit && product) {
+      setEditProduct(product);
+      setNewProduct(product);  // Load product data into form
+      setImagePreview(product.imageUrl);  // Load the existing image preview
+    }
     setIsModalOpen(!isModalOpen);
   };
 
@@ -107,16 +135,16 @@ const Products = () => {
       <h1>Manage Products</h1>
 
       {/* Add New Product Button */}
-      <button onClick={toggleModal} className="add-product-btn">
+      <button onClick={() => toggleModal(false)} className="add-product-btn">
         Create New Product
       </button>
 
-      {/* Add Product Modal */}
+      {/* Add/Edit Product Modal */}
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
-            <button className="modal-close" onClick={toggleModal}>&times;</button>
-            <h2>Create New Product</h2>
+            <button className="modal-close" onClick={() => toggleModal()}>&times;</button>
+            <h2>{isEditMode ? 'Edit Product' : 'Create New Product'}</h2>
 
             {/* Step navigation */}
             <div className="modal-steps">
@@ -182,13 +210,19 @@ const Products = () => {
             {/* Step 2: Specified */}
             {currentStep === 2 && (
               <div>
-                <div className="modal-section">
+                <div className="modal-section-category">
                   <label>Category</label>
-                  <input
-                    type="text"
-                    value={newProduct.category}
-                    onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                  />
+                  <div className="custom-select">
+                    <select
+                      value={newProduct.category}
+                      onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                    >
+                      <option value="">Select Category</option>
+                      <option value="Shoes">Shoes</option>
+                      <option value="Accessory">Accessory</option>
+                      <option value="Apparel">Apparel</option>
+                    </select>
+                  </div>
                 </div>
                 <div className="modal-section">
                   <label>Color</label>
@@ -204,6 +238,14 @@ const Products = () => {
                     type="text"
                     value={newProduct.subCategory}
                     onChange={(e) => setNewProduct({ ...newProduct, subCategory: e.target.value })}
+                  />
+                </div>
+                <div className="modal-section">
+                  <label>Size</label>
+                  <input
+                    type="text"
+                    value={newProduct.size}
+                    onChange={(e) => setNewProduct({ ...newProduct, size: e.target.value })}
                   />
                 </div>
                 <div className="modal-buttons">
@@ -234,7 +276,9 @@ const Products = () => {
                 </div>
                 <div className="modal-buttons">
                   <button className="cancel-btn" onClick={prevStep}>Previous</button>
-                  <button className="submit-btn" onClick={addProduct}>Save</button>
+                  <button className="submit-btn" onClick={isEditMode ? () => updateProduct(editProduct.id) : addProduct}>
+                    {isEditMode ? 'Update' : 'Add'}
+                  </button>
                 </div>
               </div>
             )}
@@ -282,11 +326,7 @@ const Products = () => {
                 <td>{product.subCategory}</td>
                 <td>{product.updatedAt?.toDate().toLocaleDateString()}</td>
                 <td>
-                  {editProduct && editProduct.id === product.id ? (
-                    <button onClick={() => updateProduct(product.id)}>Save</button>
-                  ) : (
-                    <button onClick={() => setEditProduct(product)}>Edit</button>
-                  )}
+                  <button onClick={() => toggleModal(true, product)}>Edit</button>
                   <button onClick={() => deleteProduct(product.id)}>Delete</button>
                 </td>
               </tr>
