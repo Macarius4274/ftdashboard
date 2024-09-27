@@ -84,6 +84,7 @@ const Products = () => {
       });
       setIsModalOpen(false);  // Close modal
       setImagePreview(null);  // Clear image preview
+      setImageFile(null);     // Reset image file
     } catch (error) {
       console.error("Error adding product:", error);
     }
@@ -91,15 +92,30 @@ const Products = () => {
 
   // Update an existing product
   const updateProduct = async (id) => {
-    const productDoc = doc(db, 'products', id);
-    await updateDoc(productDoc, {
-      ...editProduct,
-      price: Number(editProduct.price),
-      stock: Number(editProduct.stock),
-      updatedAt: new Date(),
-    });
-    setEditProduct(null);  // Exit edit mode
-    setIsModalOpen(false);  // Close modal
+    try {
+      let updatedImageUrl = editProduct.imageUrl;
+
+      // If a new image file is selected, upload it and get the new URL
+      if (imageFile) {
+        updatedImageUrl = await uploadImageAndGetUrl(imageFile);
+      }
+
+      const productDoc = doc(db, 'products', id);
+      await updateDoc(productDoc, {
+        ...newProduct,
+        imageUrl: updatedImageUrl,  // Use the updated image URL
+        price: Number(newProduct.price),
+        stock: Number(newProduct.stock),
+        updatedAt: new Date(),
+      });
+
+      setEditProduct(null);  // Exit edit mode
+      setIsModalOpen(false);  // Close modal
+      setImagePreview(null);  // Clear image preview after update
+      setImageFile(null);  // Reset image file state
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
   };
 
   // Delete a product
@@ -117,6 +133,9 @@ const Products = () => {
       setEditProduct(product);
       setNewProduct(product);  // Load product data into form
       setImagePreview(product.imageUrl);  // Load the existing image preview
+    } else {
+      setNewProduct({ name: '', category: '', color: '', price: 0, size: '', stock: 0, description: '', imageUrl: '', subCategory: '' });
+      setImagePreview(null);  // Reset preview when adding a new product
     }
     setIsModalOpen(!isModalOpen);
   };
@@ -141,7 +160,7 @@ const Products = () => {
 
       {/* Add/Edit Product Modal */}
       {isModalOpen && (
-        <div className="modal">
+        <div className={`modal ${isEditMode ? 'edit-modal' : 'add-modal'}`}>
           <div className="modal-content">
             <button className="modal-close" onClick={() => toggleModal()}>&times;</button>
             <h2>{isEditMode ? 'Edit Product' : 'Create New Product'}</h2>
@@ -179,13 +198,8 @@ const Products = () => {
                     onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                   />
                 </div>
-
-                {/* Image URL Field */}
-                <div
-                  className="modal-section file-upload"
-                  onClick={() => document.getElementById("fileInput").click()}
-                  style={{ cursor: 'pointer' }}
-                >
+                {/* Image Upload */}
+                <div className="modal-section file-upload" onClick={() => document.getElementById("fileInput").click()}>
                   <label>Upload Product Image</label>
                   <input
                     type="file"
@@ -198,11 +212,8 @@ const Products = () => {
                     <p>Drag your images here, or <span className="browse-link">Click to browse</span></p>
                     <p className="image-note">Add image to your product. Used to represent your product.</p>
                   </div>
-
-                  {/* Image Preview */}
                   {imagePreview && <img src={imagePreview} alt="Product Preview" width="200" />}
                 </div>
-
                 <button className="submit-btn" onClick={nextStep}>Next</button>
               </div>
             )}
@@ -282,7 +293,6 @@ const Products = () => {
                 </div>
               </div>
             )}
-
           </div>
         </div>
       )}
@@ -320,7 +330,7 @@ const Products = () => {
                   <img src={product.imageUrl} alt={product.name} width="50" />
                 </td>
                 <td>{product.name}</td>
-                <td>${product.price}</td>
+                <td>P{product.price}</td>
                 <td>{product.size}</td>
                 <td>{product.stock}</td>
                 <td>{product.subCategory}</td>

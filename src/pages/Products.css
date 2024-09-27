@@ -39,8 +39,8 @@ body, html {
 
 /* Add this specific style for the edit modal */
 .modal-content.edit-modal {
-  width: 400px; /* Smaller width */
-  padding: 15px;
+  width: 20%; /* Smaller width */
+  padding: px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -124,6 +124,7 @@ body, html {
 /* Modal steps with icons and arrows */
 .modal-steps {
   display: flex;
+  width:100%;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;

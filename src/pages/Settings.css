@@ -1,0 +1,147 @@
+/* General page styling */
+.settings-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f7fa;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Headings */
+  h1, h2, h3 {
+    color: #333;
+  }
+  
+  /* Admin Users Table */
+  .admin-users-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+  }
+  
+  .admin-users-list th, 
+  .admin-users-list td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .admin-users-list th {
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  .admin-users-list tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .admin-users-list button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .admin-users-list button:hover {
+    background-color: #111111;
+  }
+  
+  /* Add Admin Form */
+  .add-admin-form {
+    margin-top: 20px;
+  }
+  
+  .add-admin-form h3 {
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .add-admin-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .add-admin-form button {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-admin-form button:hover {
+    background-color: #218838;
+  }
+  
+  /* Security Modal */
+  .security-modal, .edit-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  .modal-content h2 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .modal-content button {
+    padding: 10px 15px;
+    margin-right: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .modal-content button:hover {
+    background-color: #0056b3;
+  }
+  
+  .modal-content button:nth-child(2) {
+    background-color: #dc3545;
+  }
+  
+  .modal-content button:nth-child(2):hover {
+    background-color: #c82333;
+  }
+  
+  /* Loading text */
+  p {
+    color: #555;
+    font-size: 16px;
+    text-align: center;
+  }
+  
